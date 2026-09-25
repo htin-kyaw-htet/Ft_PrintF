@@ -48,25 +48,22 @@ static int	ft_printf_conversion(char c, va_list args)
 
 int	ft_printf(const char *format, ...)
 {
-	int		i;
-	int		len;
 	va_list	args;
+	int		len;
+	int		is_format;
 
+	if (!format)
+		return (-1);
 	va_start(args, format);
 	len = 0;
-	i = 0;
-	while (format[i] != '\0')
+	while (*format)
 	{
-		if (format[i] == '%' && format[i + 1] != '\0')
-		{
-			len = len + ft_printf_conversion(format[i + 1], args);
-			i++;
-		}
+		is_format = (format[0] == '%' && format[1]);
+		if (is_format)
+			len += ft_printf_conversion(format[1], &args);
 		else
-		{
-			len = len + ft_putchar(format[i]);
-		}
-		i++;
+			len += ft_putchar(*format);
+		format += 1 + is_format;
 	}
 	va_end(args);
 	return (len);
